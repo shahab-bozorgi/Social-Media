@@ -122,6 +122,8 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = 'media/'
 
+AUTH_USER_MODEL = 'user.CustomUser'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'assets')]
 

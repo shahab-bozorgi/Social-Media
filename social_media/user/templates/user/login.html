@@ -1,72 +1,62 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content=""/>
-    <meta name="keywords" content=""/>
-    <title>Winku Social Network Toolkit</title>
-    <link rel="icon" href="{% static 'winku-ltr/images/fav.png' %}" type="image/png" sizes="16x16">
-    <link rel="stylesheet" href="{% static 'winku-ltr/css/main.min.css' %}">
-    <link rel="stylesheet" href="{% static 'winku-ltr/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'winku-ltr/css/color.css' %}">
-    <link rel="stylesheet" href="{% static 'winku-ltr/css/responsive.css' %}">
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'login-form-11/css/stylelogi.css' %}">
 </head>
 <body>
-<div class="theme-layout">
-    <div class="container-fluid pdng0">
-        <div class="row merged">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="land-featurearea">
-                    <div class="land-meta">
-                        <h1>Winku</h1>
-                        <p>Winku is free to use for as long as you want with two active projects.</p>
-                        <div class="friend-logo">
-                            <span><img src="{% static 'images/wink.png' %}" alt=""></span>
-                        </div>
-                        <a href="#" title="" class="folow-me">Follow Us on</a>
-                    </div>
-                </div>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">Login</h2>
             </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="login-reg-bg">
-                    <div class="log-reg-area sign">
-                        <h2 class="log-title">Login</h2>
-                        <p>Don’t use Winku Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join
-                            now</a></p>
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form.non_field_errors }}
-                            <div class="form-group">
-                                {{ form.username }}
-                                {{ form.username.errors }}
-                            </div>
-                            <div class="form-group">
-                                {{ form.password }}
-                                {{ form.password.errors }}
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" checked="checked"/><i class="check-box"></i>Always Remember
-                                    Me.
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
+                    <form method="post" class="login-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.username }}
+                        </div>
+                        <div class="form-group d-flex">
+                            {{ form.password }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
+                        </div>
+                        <div class="form-group d-md-flex">
+                            <div class="w-50">
+                                <label class="checkbox-wrap checkbox-primary">Remember Me
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
                                 </label>
                             </div>
-                            <a href="#" title="" class="forgot-pwd">Forgot Password?</a>
-                            <div class="submit-btns">
-                                <button class="mtr-btn signin" type="submit"><span>Login</span></button>
-                                <button class="mtr-btn signup" type="button"><span>Register</span></button>
+                            <div class="w-50 text-md-right">
+                                <a href="#">Forgot Password</a>
                             </div>
-                        </form>
-
-                    </div>
+                        </div>
+                    </form>
+                    <div class="form-group text-center mt-3">
+                        <p>Don't have an account? <a href="{% url 'user:register' %}">Register here</a></p>
+                    </div> <!-- لینک به صفحه ثبت‌نام -->
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="{% static 'js/main.min.js' %}"></script>
-<script src="{% static 'js/script.js' %}"></script>
+</section>
+
+<script src="{% static 'login-form-11/js/jquery.min.js' %}"></script>
+<script src="{% static 'login-form-11/js/popper.js' %}"></script>
+<script src="{% static 'login-form-11/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'login-form-11/js/main.js' %}"></script>
+
 </body>
 </html>
