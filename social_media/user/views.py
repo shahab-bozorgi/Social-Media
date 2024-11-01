@@ -1,9 +1,31 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
 from user.forms import LoginForm, RegistrationForm
+from user.models import CustomUser
 
+def register_user(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+                form.add_error('password_confirm', 'Passwords do not match.')
+                return render(request, 'user/register.html', {'form': form})
+
+
+            user = CustomUser(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+            )
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            return redirect('home:home')
+        else:
+            print(form.errors)
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'user/register.html', {'form': form})
 
 def login_user(request):
     if request.method == 'POST':
@@ -22,31 +44,3 @@ def login_user(request):
 
     return render(request, 'user/login.html', {'form': form})
 
-
-
-
-
-
-def register_user(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            # بررسی رمز عبور و تأیید آن
-            if form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
-                form.add_error('password_confirm', 'Passwords do not match.')
-                return render(request, 'user/register.html', {'form': form})
-
-            # ایجاد کاربر جدید
-            user = User(
-                full_name=form.cleaned_data['full_name'],
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-            )
-            user.set_password(form.cleaned_data['password'])  # رمز عبور را با متد set_password تنظیم کنید
-            user.save()  # کاربر را ذخیره کنید
-            return redirect('home:home')  # به صفحه اصلی هدایت کنید
-
-    else:
-        form = RegistrationForm()  # فرم جدید اگر متد POST نباشد
-
-    return render(request, 'user/register.html', {'form': form})  # فرم را به صفحه ارسال کنید
