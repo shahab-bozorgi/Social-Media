@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from user.models import CustomUser
 
+
 class RegistrationForm(forms.Form):
     username = forms.CharField(
         label="User Name",
@@ -82,4 +83,5 @@ class CustomUserChangeForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password', 'fullname', 'bio', 'avatar', 'is_active', 'is_staff')
+
 
