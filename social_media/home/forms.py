@@ -1,11 +1,8 @@
 from django import forms
+from user.models import CustomUser
 
-from user.models import Profile
-
-
-class EditProfileForm(forms.ModelForm):
-    avatar = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}))
-
+class UpdateAvatarForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = CustomUser
         fields = ['avatar']
+

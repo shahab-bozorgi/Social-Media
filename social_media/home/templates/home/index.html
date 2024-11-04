@@ -466,13 +466,32 @@
                                     {% endif %}
 
                                     <form method="POST" enctype="multipart/form-data"
-                                          action="{% url 'home:edit_profile' %}">
+                                          action="{% url 'home:update_avatar' %}">
+
                                         {% csrf_token %}
-                                        {{ profile_form.avatar }}
+                                        {{ form.as_p }}
+                                        <i class="fa fa-camera-retro"></i>
+                                        <label class="fileContainer">
+                                            Edit Display Photo
+                                            <input type="file">
+                                        </label>
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </form>
                                 </figure>
+
+                                <!-- فرم خارج از تگ <figure> -->
+
                             {% endif %}
+
+
+{#                            <div class="user-avatar">#}
+{#                                <figure>#}
+{#                                    <img src="images/resources/user-avatar.jpg" alt="">#}
+{#                                    <form class="edit-phto">#}
+{##}
+{#                                    </form>#}
+{#                                </figure>#}
+{#                            </div>#}
 
 
                         </div>
