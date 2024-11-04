@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from user.forms import LoginForm, RegistrationForm
 from user.models import CustomUser
+from django.contrib.auth import logout
 
 def register_user(request):
     if request.method == 'POST':
@@ -44,3 +45,6 @@ def login_user(request):
 
     return render(request, 'user/login.html', {'form': form})
 
+def logout_user(request):
+    logout(request)
+    return redirect('user:login')
