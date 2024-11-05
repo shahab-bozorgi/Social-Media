@@ -423,14 +423,15 @@
                 </li>
             </ul>
             <div class="user-img">
-                {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" alt="User Avatar"
+                {% if request.user.avatar %}
+                    <img src="{{ request.user.avatar.url }}" alt="User Avatar"
                          style="width: 70px; height: 70px; object-fit: cover; border-radius: 50%;">
                 {% else %}
                     <img src="{% static 'images/resources/user-avatar.png' %}"
                          alt="Default Avatar"
                          style="width: 70px; height: 70px; object-fit: cover; border-radius: 50%;">
                 {% endif %}
+
                 <span class="status f-online"></span>
                 <div class="user-setting">
                     <a href="#" title=""><span class="status f-online"></span>online</a>
@@ -456,6 +457,7 @@
             {% endif %}
             <div class="add-btn">
                 <span>1205 followers</span>
+                <a href="#" title="" data-ripple="">Add Friend</a>
             </div>
 
 
@@ -463,40 +465,27 @@
                 <div class="row merged">
                     <div class="col-lg-2 col-sm-3">
                         <div class="user-avatar">
-                            {% if user.is_authenticated %}
-                                <figure>
-                                    {% if user.avatar %}
-                                        <img src="{{ user.avatar.url }}" alt="" >
-                                    {% else %}
-                                        <img src="{% static 'images/resources/user-avatar.png' %}" alt="">
-                                    {% endif %}
+                            <figure>
+                                {% if user.avatar %}
+                                    <img src="{{ user.avatar.url }}" alt="{{ user.username }}'s avatar">
+
+                                {% else %}
+                                    <img src="{% static 'images/resources/user-avatar.png' %}"
+                                         alt="{{ user.username }}'s avatar">
+                                {% endif %}
 
 
-                                </figure>
+                            </figure>
 
-                                <!-- فرم خارج از تگ <figure> -->
-
-                            {% endif %}
 
                         </div>
-                        <form method="POST" enctype="multipart/form-data"
-                              action="{% url 'home:update_avatar' %}">
 
-                            {% csrf_token %}
-                            {{ form.avatar }}
-
-                            <i class="fa fa-camera-retro"><label class="fileContainer">
-                                Edit Display Photo
-                            </label></i>
-
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
                     </div>
                     <div class="col-lg-10 col-sm-9">
                         <div class="timeline-info">
                             <ul>
                                 <li class="admin-name">
-                                    <h5>{{ request.user.username }}</h5>
+                                    <h5>{{ user.username }}</h5>
                                 </li>
                                 <li>
                                     <a class="active" href="time-line.html" title="" data-ripple="">time line</a>

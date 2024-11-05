@@ -1322,8 +1322,10 @@ header.sticky {
 
 .new-postbox {
     display: inline-block;
-    width: 100%;
+    width: 100%; /* یا اندازه دلخواه دیگر */
 }
+
+
 
 .new-postbox > figure {
     display: inline-block;
