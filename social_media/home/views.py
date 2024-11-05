@@ -1,15 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
 from home.forms import UpdateAvatarForm
 from user.models import CustomUser
-
 
 @login_required (login_url='user:login')
 def home(request):
     return render(request, 'home/index.html')
-
-
 
 @login_required
 def update_avatar(request):
