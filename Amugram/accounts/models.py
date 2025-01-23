@@ -120,7 +120,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     first_name = models.CharField(_("first name"), max_length=50, null=True, blank=True)
     last_name = models.CharField(_("last name"), max_length=50, null=True, blank=True)
     avatar = models.ImageField(
@@ -129,10 +129,12 @@ class Profile(models.Model):
         upload_to="images/users",
     )
     bio = models.TextField(_("bio"), null=True, blank=True)
-    birth_date = models.DateField(_("birth date"))
+    birth_date = models.DateField(_("birth date"), null=True, blank=True)
     followings_count = models.IntegerField(default=0, null=True)
     followers_count = models.IntegerField(default=0, null=True)
     posts_count = models.IntegerField(default=0, null=True)
+
+
 
 
 
