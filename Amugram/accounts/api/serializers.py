@@ -16,9 +16,36 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["phone"]
 class ProfileSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(source="user.phone")
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = [
+            "phone",
+            "first_name",
+            "last_name",
+            "avatar",
+            "bio",
+            "followers_count",
+            "followings_count",
+            "posts_count",
+        ]
 
-        
+class PublicProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            "first_name",
+            "last_name",
+            "avatar",
+            "bio",
+            "followers_count",
+            "followings_count",
+            "posts_count",
+        ]
+
+

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .serializers import UserSerializer, ProfileSerializer
+from .serializers import UserSerializer, ProfileSerializer, PublicProfileSerializer
 from ..models import User, Profile
 
 User = get_user_model()
@@ -37,10 +37,15 @@ class ProfileView(APIView):
 
     def get(self, request, *args, **kwargs):
         username = kwargs.get('username')
-        try:
-            user = get_object_or_404(User, username=username)
+        user = get_object_or_404(User.objects.select_related("profile"), username=username)
+
+        if request.user != user:
+            profile_serializer = PublicProfileSerializer(user.profile)
+        else:
             profile_serializer = ProfileSerializer(user.profile)
-            return Response(profile_serializer.data, status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({"detail": "Profile not found for this user."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(profile_serializer.data, status=status.HTTP_200_OK)
+
+
+
 
