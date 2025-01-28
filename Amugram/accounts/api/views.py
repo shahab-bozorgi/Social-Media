@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .serializers import UserSerializer, ProfileSerializer,PublicProfileSerializer, EditProfileSerializer
+from .serializers import UserSerializer, ProfileSerializer, PublicProfileSerializer, \
+    UpdateSerializer
 from ..models import User, Profile
 
 User = get_user_model()
@@ -52,19 +53,19 @@ class ProfileView(APIView):
         return Response(profile_serializer.data, status=status.HTTP_200_OK)
 
 
-class EditProfileView(APIView):
+class UpdateProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = EditProfileSerializer
+    serializer_class = UpdateSerializer
 
     def get_user(self):
-        return self.request.user
+        return self.request.user.profile
 
-    def patch(self, request, *args, **kwargs):  # استفاده از PATCH برای آپدیت جزئی
-        user = self.get_user()
-        serializer = EditProfileSerializer(user.profile, data=request.data, partial=True)
+    def patch(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_user(), data=request.data, partial=True,)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
