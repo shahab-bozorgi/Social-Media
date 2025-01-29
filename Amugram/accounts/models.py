@@ -91,7 +91,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
-        return self.phone
+        return self.username
 
     def clean(self):
         """
@@ -133,6 +133,9 @@ class Profile(models.Model):
     followings_count = models.IntegerField(default=0, null=True)
     followers_count = models.IntegerField(default=0, null=True)
     posts_count = models.IntegerField(default=0, null=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 
