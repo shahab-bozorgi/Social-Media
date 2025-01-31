@@ -1,13 +1,14 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
 )
-
 from django.utils.translation import gettext_lazy as _
-
 from django.core.exceptions import ValidationError
+
+from config.uuid_fields import UUIDBinaryField
 from . import validations
 
 
@@ -87,8 +88,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = MyUserManager()
 
-    USERNAME_FIELD = "phone"
-    REQUIRED_FIELDS = ["username"]
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["phone"]
 
     def __str__(self):
         return self.username

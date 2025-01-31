@@ -2,6 +2,7 @@
 from rest_framework import serializers
 
 from accounts.models import User, Profile
+from posts.models import Post
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,7 +23,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            "user",
             "phone",
             "first_name",
             "last_name",
@@ -48,14 +48,19 @@ class PublicProfileSerializer(serializers.ModelSerializer):
 
 
 class UpdateSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    username = serializers.CharField(source="user.username")
+    phone = serializers.CharField(source="user.phone")
+    email = serializers.CharField(source="user.email")
+
     password = serializers.CharField(write_only=True, required=False)
     new_password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Profile
         fields = [
-            "user",
+            "username",
+            "phone",
+            "email",
             "bio",
             "first_name",
             "last_name",
@@ -91,6 +96,15 @@ class UpdateSerializer(serializers.ModelSerializer):
 
         return instance
 
+class CreatePostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    first_name = serializers.CharField(source="user.first_name")
+    class Meta:
+        model = Post
+        fields = [
+            "images",
+            "caption"
+        ]
 
 
 
