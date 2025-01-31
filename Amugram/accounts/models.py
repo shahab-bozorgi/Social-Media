@@ -8,7 +8,6 @@ from django.contrib.auth.models import (
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
-from config.uuid_fields import UUIDBinaryField
 from . import validations
 
 
@@ -131,9 +130,9 @@ class Profile(models.Model):
     )
     bio = models.TextField(_("bio"), null=True, blank=True)
     birth_date = models.DateField(_("birth date"), null=True, blank=True)
-    followings_count = models.IntegerField(default=0, null=True)
-    followers_count = models.IntegerField(default=0, null=True)
-    posts_count = models.IntegerField(default=0, null=True)
+    followings_count = models.PositiveIntegerField(default=0, null=True)
+    followers_count = models.PositiveIntegerField(default=0, null=True)
+    posts_count = models.PositiveIntegerField(default=0, null=True)
 
     def __str__(self):
         return self.user.username

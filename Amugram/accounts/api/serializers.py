@@ -96,15 +96,6 @@ class UpdateSerializer(serializers.ModelSerializer):
 
         return instance
 
-class CreatePostSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username")
-    first_name = serializers.CharField(source="user.first_name")
-    class Meta:
-        model = Post
-        fields = [
-            "images",
-            "caption"
-        ]
 
 
 
