@@ -9,7 +9,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, required=True)
+    images = ImageSerializer(many=True, required=False, allow_empty=False)
     class Meta:
         model = Post
         fields = [
@@ -17,13 +17,18 @@ class CreatePostSerializer(serializers.ModelSerializer):
             "caption"
         ]
 
+    def validate_images(self, value):
+        if not value:
+            raise serializers.ValidationError("At least one image is required.")
+        return value
+
     def create(self, validated_data):
         images_data = validated_data.pop("images", [])
         post = Post.objects.create(**validated_data)
 
-        # ذخیره‌ی هر تصویر در مدل PostImage
         for image_data in images_data:
             PostImage.objects.create(post=post, **image_data)
+
         return post
 
 # class CreatePostSerializer(serializers.ModelSerializer):
@@ -32,7 +37,6 @@ class CreatePostSerializer(serializers.ModelSerializer):
 #         fields = ["user", "images", "caption"]
 #
 #     def create(self, validated_data):
-#         # فرض می‌کنیم که از `request.user` برای مقداردهی به `user` استفاده می‌کنیم
 #         validated_data['user'] = self.context['request'].user
 #         post = Post.objects.create(**validated_data)
 #         return post

@@ -14,6 +14,9 @@ class CreatePostView(APIView):
         data = request.data.copy()
         images = request.FILES.getlist("images")
 
+        if not images:
+            return Response({"images": ["At least one image is required."]}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = CreatePostSerializer(data=data)
         if serializer.is_valid():
             post = serializer.save(user=request.user)
@@ -24,5 +27,6 @@ class CreatePostView(APIView):
             return Response(CreatePostSerializer(post).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
