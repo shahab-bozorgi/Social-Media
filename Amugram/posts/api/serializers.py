@@ -42,18 +42,18 @@ class CreatePostSerializer(serializers.ModelSerializer):
 #         return post
 
 
-# class PostSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source="user.username")
-#     avatar = serializers.CharField(source="user.avatar")
-#
-#     class Meta:
-#         model = Post
-#         fields = [
-#             "username",
-#             "avatar",
-#             "images",
-#             "caption",
-#             "comments_count",
-#             "likes_count",
-#             "created_at"
-#         ]
+class PostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    avatar = serializers.CharField(source="user.avatar")
+
+    class Meta:
+        model = Post
+        fields = [
+            "username",
+            "avatar",
+            "images",
+            "caption",
+            "comments_count",
+            "likes_count",
+            "created_at"
+        ]
