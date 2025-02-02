@@ -44,9 +44,11 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = [
             "username",
+            "avatar",
             "caption",
             "image",
-            "avatar",
+            "comments_count",
+            "likes_count",
             "created_at",
 
         ]
