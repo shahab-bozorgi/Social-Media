@@ -11,7 +11,7 @@ class Post(models.Model):
     comments_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.user}, {self.caption}"
+        return f"{self.user}, {self.caption},    {self.id}"
 
     class Meta:
         verbose_name = "Post"

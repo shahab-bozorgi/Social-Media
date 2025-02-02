@@ -10,6 +10,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class CreatePostSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False, allow_empty=False)
+
     class Meta:
         model = Post
         fields = [
@@ -31,6 +32,25 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
         return post
 
+
+class PostSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    avatar = serializers.ImageField(source="user.profile.avatar")
+    image = serializers.ImageField(source="images.first.image")
+
+
+    class Meta:
+
+        model = Post
+        fields = [
+            "username",
+            "caption",
+            "image",
+            "avatar",
+            "created_at",
+
+        ]
+
 # class CreatePostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Post
@@ -41,19 +61,19 @@ class CreatePostSerializer(serializers.ModelSerializer):
 #         post = Post.objects.create(**validated_data)
 #         return post
 
-
-class PostSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username")
-    avatar = serializers.CharField(source="user.avatar")
-
-    class Meta:
-        model = Post
-        fields = [
-            "username",
-            "avatar",
-            "images",
-            "caption",
-            "comments_count",
-            "likes_count",
-            "created_at"
-        ]
+#
+# class PostSerializer(serializers.ModelSerializer):
+#     username = serializers.CharField(source="user.username")
+#     avatar = serializers.CharField(source="user.avatar")
+#
+#     class Meta:
+#         model = Post
+#         fields = [
+#             "username",
+#             "avatar",
+#             "images",
+#             "caption",
+#             "comments_count",
+#             "likes_count",
+#             "created_at"
+#         ]
