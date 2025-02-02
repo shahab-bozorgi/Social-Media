@@ -51,29 +51,3 @@ class PostSerializer(serializers.ModelSerializer):
 
         ]
 
-# class CreatePostSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Post
-#         fields = ["user", "images", "caption"]
-#
-#     def create(self, validated_data):
-#         validated_data['user'] = self.context['request'].user
-#         post = Post.objects.create(**validated_data)
-#         return post
-
-#
-# class PostSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source="user.username")
-#     avatar = serializers.CharField(source="user.avatar")
-#
-#     class Meta:
-#         model = Post
-#         fields = [
-#             "username",
-#             "avatar",
-#             "images",
-#             "caption",
-#             "comments_count",
-#             "likes_count",
-#             "created_at"
-#         ]
