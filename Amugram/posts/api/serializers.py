@@ -36,7 +36,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username")
     avatar = serializers.ImageField(source="user.profile.avatar")
-    image = serializers.ImageField(source="images.first.image")
+    image = ImageSerializer(source="images", many=True)
 
 
     class Meta:
