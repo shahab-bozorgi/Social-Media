@@ -53,3 +53,11 @@ class PostSerializer(serializers.ModelSerializer):
 
         ]
 
+
+class PostsSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(many=True)
+    class Meta:
+        model = Post
+        fields =[
+            "images"
+        ]

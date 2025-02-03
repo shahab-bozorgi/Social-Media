@@ -5,8 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from posts.api.serializers import CreatePostSerializer, PostSerializer
+from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer
 from posts.models import Post, PostImage
+from posts.utils import StandardResultsSetPagination
 
 
 class CreatePostView(APIView):
@@ -41,4 +42,19 @@ class PostImageView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+
+
+class PostsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostsSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get(self, request, username, *args, **kwargs):
+        posts = Post.objects.select_related('user').filter(user__username=username)
+
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(posts, request)
+        serializer = self.serializer_class(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
