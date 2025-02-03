@@ -55,9 +55,6 @@ class PostsView(ListAPIView):
             .filter(user__username=username)
 
     def get(self, request, *args, **kwargs):
-        """
-        Override this method if you need custom logic for GET requests.
-        """
         return super().get(request, *args, **kwargs)
 
 
