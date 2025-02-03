@@ -50,7 +50,9 @@ class PostsView(APIView):
     pagination_class = StandardResultsSetPagination
 
     def get(self, request, username, *args, **kwargs):
-        posts = Post.objects.select_related('user').filter(user__username=username)
+        posts = Post.objects.select_related('user') \
+            .prefetch_related('images') \
+            .filter(user__username=username)
 
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
