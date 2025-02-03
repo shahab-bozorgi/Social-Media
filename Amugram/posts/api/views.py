@@ -1,6 +1,7 @@
 from django.db.migrations import serializer
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -42,21 +43,21 @@ class PostImageView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-
-
-class PostsView(APIView):
+class PostsView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostsSerializer
     pagination_class = StandardResultsSetPagination
 
-    def get(self, request, username, *args, **kwargs):
-        posts = Post.objects.select_related('user') \
-            .prefetch_related('images') \
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        return Post.objects.select_related('user')\
+            .prefetch_related('images')\
             .filter(user__username=username)
 
-        paginator = self.pagination_class()
-        result_page = paginator.paginate_queryset(posts, request)
-        serializer = self.serializer_class(result_page, many=True)
+    def get(self, request, *args, **kwargs):
+        """
+        Override this method if you need custom logic for GET requests.
+        """
+        return super().get(request, *args, **kwargs)
 
-        return paginator.get_paginated_response(serializer.data)
 
