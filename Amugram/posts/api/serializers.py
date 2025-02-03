@@ -61,3 +61,12 @@ class PostsSerializer(serializers.ModelSerializer):
         fields =[
             "images"
         ]
+
+
+class Like:
+    pass
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: Like

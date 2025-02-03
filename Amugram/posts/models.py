@@ -60,3 +60,64 @@ class Comment(models.Model):
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
         ordering = ['-created_at']
+
+
+class LikePost(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='like_posts'
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='likes_on_posts'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Liked by {self.user},  for {self.post}, and Like_id {self.id}"
+
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_user_post_like',
+                condition=models.Q(post__isnull=False),
+            ),
+        ]
+
+
+class LikeComment(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='likes_comments'
+    )
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name='likes_on_comment'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Liked by {self.user},  for {self.comment}, and Like_id {self.id}"
+
+    def clean(self):
+        if not self.comment and not self.comment:
+            raise ValueError(
+                'A Like must be associated with either a post or a comment, not both.'
+            )
+        if self.comment and self.comment:
+            raise ValueError(
+                'A Like cannot be associated with both a post and a comment simultaneously.'
+            )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'comment'],
+                name='unique_user_comment_like',
+                condition=models.Q(comment__isnull=False),
+            ),
+        ]
