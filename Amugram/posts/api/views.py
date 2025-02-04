@@ -1,14 +1,12 @@
-from django.db.migrations import serializer
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions, status
+from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer, LikeSerializer
 from posts.models import Post, PostImage, LikePost
-from posts.utils import StandardResultsSetPagination
+from utils.utils import StandardResultsSetPagination
 
 
 class CreatePostView(APIView):
