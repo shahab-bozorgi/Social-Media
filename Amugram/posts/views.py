@@ -1,7 +1,13 @@
-from django.shortcuts import render
+from posts.api.views import PostImageView, PostsView, CreatePostView, DeletePostView, CreateLikeView, DeleteLikeView
 
-from posts.api.views import PostImageView, PostsView
+CreatePostView()
+
+DeletePostView()
 
 PostImageView()
 
 PostsView()
+
+CreateLikeView()
+
+DeleteLikeView()

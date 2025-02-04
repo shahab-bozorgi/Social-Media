@@ -9,6 +9,4 @@ urlpatterns = [
     path('api/like/create/<int:post_id>/', CreateLikeView.as_view(), name='create_like'),
     path('api/like/delete/<int:post_id>/', DeleteLikeView.as_view(), name='dislike_post'),
 
-
-
 ]
