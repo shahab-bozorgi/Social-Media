@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from posts.models import Post, PostImage
+from posts.models import Post, PostImage, LikePost
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -38,9 +38,7 @@ class PostSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source="user.profile.avatar")
     image = ImageSerializer(source="images", many=True)
 
-
     class Meta:
-
         model = Post
         fields = [
             "username",
@@ -56,17 +54,31 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostsSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
+
     class Meta:
         model = Post
-        fields =[
+        fields = [
             "images"
         ]
 
 
-class Like:
-    pass
-
-
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
-        model: Like
+        model = LikePost
+        fields = [
+            "user",
+            "post",
+            "created_at"
+        ]
+
+    def create(self, validated_data):
+        user = validated_data["user"]
+        post = validated_data["post"]
+
+        existing_like = LikePost.objects.filter(user=user, post=post).first()
+
+        if existing_like:
+            existing_like.delete()
+            return None
+
+        return LikePost.objects.create(**validated_data)

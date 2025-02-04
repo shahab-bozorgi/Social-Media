@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer
-from posts.models import Post, PostImage
+from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer, LikeSerializer
+from posts.models import Post, PostImage, LikePost
 from posts.utils import StandardResultsSetPagination
 
 
@@ -57,4 +57,18 @@ class PostsView(ListAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+
+class CreateLikeView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LikeSerializer
+
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+
+        like, created = LikePost.objects.get_or_create(user=request.user, post=post)
+        if not created:
+            return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
