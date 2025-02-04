@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+from posts.api.views import PostImageView, PostsView
+
+PostImageView()
+
+PostsView()

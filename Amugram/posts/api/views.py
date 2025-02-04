@@ -31,6 +31,21 @@ class CreatePostView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DeletePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post.objects.select_related(), id=post_id)
+
+        if post.user != request.user:
+            return Response({"detail": "You do not have permission to delete this post."},
+                            status=status.HTTP_403_FORBIDDEN)
+        post.delete()
+
+        return Response({"deleted": "Post deleted"}, status=status.HTTP_200_OK)
+
+
 class PostImageView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
