@@ -10,17 +10,20 @@ def update_posts_count_on_add(sender, instance, created, **kwargs):
         user_profile.posts_count += 1
         user_profile.save()
 
+
 @receiver(post_delete, sender=Post)
 def update_posts_count_on_delete(sender, instance, **kwargs):
     user_profile = instance.user.profile
     user_profile.posts_count -= 1
     user_profile.save()
 
+
 @receiver(post_save, sender=LikePost)
 def update_like_count_on_add(sender, instance, created, **kwargs):
     if created:
         instance.post.likes_count += 1
         instance.post.save()
+
 
 @receiver(post_delete, sender=LikePost)
 def update_like_count_on_delete(sender, instance, **kwargs):

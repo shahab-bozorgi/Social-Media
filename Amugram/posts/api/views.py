@@ -70,3 +70,20 @@ class CreateLikeView(APIView):
 
         return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
+
+class DeleteLikeView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LikeSerializer
+
+    def delete(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post.objects.select_related(), id=post_id)
+
+        like = LikePost.objects.filter(user=request.user, post=post).first()
+
+        if not like:
+            return Response({"detail": "You haven't liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        like.delete()
+
+        return Response({"detail": "Post disliked successfully."}, status=status.HTTP_200_OK)
