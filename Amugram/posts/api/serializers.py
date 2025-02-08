@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from posts.models import Post, PostImage, LikePost
+from posts.models import Post, PostImage, LikePost, Comment
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -82,3 +82,39 @@ class LikeSerializer(serializers.ModelSerializer):
             return None
 
         return LikePost.objects.create(**validated_data)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    avatar = serializers.ImageField(source="profile.avatar")
+
+    class Meta:
+        model = Comment
+        fields = [
+            "username",
+            "avatar",
+            "parent",
+            "comment",
+            "likes_count",
+            "created_at",
+            "post"
+
+        ]
+
+    def create(self, validated_data):
+        user = validated_data.pop("user")
+        avatar = validated_data.pop("avatar", [])
+        parent = validated_data.pop("parent")
+        comment = validated_data.pop("comment")
+        post = validated_data.pop("post")
+
+        comment_instance = Comment.objects.create(
+            user=user,
+            avatar=avatar,
+            parent=parent,
+            comment=comment,
+            post=post
+        )
+
+        return comment_instance
+

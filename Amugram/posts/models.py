@@ -49,6 +49,7 @@ class Comment(models.Model):
         related_name='replies',
         verbose_name="Parent Comment"
     )
+    likes_count = models.PositiveIntegerField(default=0)
 
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField("Updated at", auto_now=True)
