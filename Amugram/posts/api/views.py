@@ -1,11 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer, LikeSerializer
-from posts.models import Post, PostImage, LikePost
+from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer, LikeSerializer, \
+    CommentSerializer
+from posts.models import Post, PostImage, LikePost, Comment
 from utils.utils import StandardResultsSetPagination
 
 
@@ -102,3 +103,20 @@ class DeleteLikeView(APIView):
         like.delete()
 
         return Response({"detail": "Post disliked successfully."}, status=status.HTTP_200_OK)
+
+
+class CommentView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post.objects.select_related(), id=post_id)
+
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            comment = Comment.objects.create(user=request.user, post=post, **serializer.validated_data)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
