@@ -51,7 +51,7 @@ class Comment(models.Model):
     )
     likes_count = models.PositiveIntegerField(default=0)
 
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField("Updated at", auto_now=True)
 
     def __str__(self):

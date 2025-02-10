@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from posts.models import Post, PostImage, LikePost, Comment
 
@@ -85,36 +86,15 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username")
-    avatar = serializers.ImageField(source="profile.avatar")
+    post_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Comment
-        fields = [
-            "username",
-            "avatar",
-            "parent",
-            "comment",
-            "likes_count",
-            "created_at",
-            "post"
-
-        ]
+        fields = ["parent", "comment", "post_id"]
 
     def create(self, validated_data):
-        user = validated_data.pop("user")
-        avatar = validated_data.pop("avatar", [])
-        parent = validated_data.pop("parent")
-        comment = validated_data.pop("comment")
-        post = validated_data.pop("post")
-
-        comment_instance = Comment.objects.create(
-            user=user,
-            avatar=avatar,
-            parent=parent,
-            comment=comment,
-            post=post
-        )
-
-        return comment_instance
+        user = self.context["request"].user
+        post_id = validated_data.pop("post_id")
+        post = get_object_or_404(Post, id=post_id)
+        return Comment.objects.create(user=user, post=post, **validated_data)
 
