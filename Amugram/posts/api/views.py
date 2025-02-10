@@ -1,3 +1,4 @@
+from django.db.migrations import serializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView
@@ -95,7 +96,7 @@ class DeleteLikeView(APIView):
         post_id = kwargs.get('post_id')
         post = get_object_or_404(Post.objects.select_related(), id=post_id)
 
-        like = LikePost.objects.filter(user=request.user, post=post).first()
+        like = LikePost.objects.filter(user=request.user, post=post)
 
         if not like:
             return Response({"detail": "You haven't liked this post."}, status=status.HTTP_400_BAD_REQUEST)
@@ -117,6 +118,24 @@ class CommentView(CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DeleteCommentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        comment_id = kwargs.get('comment_id')
+
+        if not comment_id:
+            return Response({"detail": "Comment ID is missing."}, status=status.HTTP_400_BAD_REQUEST)
+
+        comment = Comment.objects.filter(user=request.user, id=comment_id).first()
+        if not comment:
+            return Response({"detail": "You haven't commented on this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        comment.delete()
+        return Response({"detail": "Comment deleted successfully."}, status=status.HTTP_200_OK)
+
+
+
 class GetCommentsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = GetCommentView
@@ -128,6 +147,7 @@ class GetCommentsView(APIView):
 
         serializer = GetCommentView(comment,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
