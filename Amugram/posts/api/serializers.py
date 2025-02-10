@@ -85,7 +85,7 @@ class LikeSerializer(serializers.ModelSerializer):
         return LikePost.objects.create(**validated_data)
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class CreateCommentSerializer(serializers.ModelSerializer):
     post_id = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -98,3 +98,18 @@ class CommentSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, id=post_id)
         return Comment.objects.create(user=user, post=post, **validated_data)
 
+
+class GetCommentView(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    avatar = serializers.ImageField(source="user.profile.avatar")
+
+    class Meta:
+        model = Comment
+        fields = [
+            "username",
+            "avatar",
+            "comment",
+            "parent",
+            "likes_count",
+            "created_at"
+        ]

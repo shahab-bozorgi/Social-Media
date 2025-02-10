@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSerializer, LikeSerializer, \
-    CommentSerializer
+    CreateCommentSerializer, GetCommentView
 from posts.models import Post, PostImage, LikePost, Comment
 from utils.utils import StandardResultsSetPagination
 
@@ -107,7 +107,7 @@ class DeleteLikeView(APIView):
 
 class CommentView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = CommentSerializer
+    serializer_class = CreateCommentSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={"request": request})
@@ -116,6 +116,18 @@ class CommentView(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class GetCommentsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = GetCommentView
+
+    def get(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post.objects.select_related(), id=post_id)
+        comment = Comment.objects.filter(post=post, user=request.user).order_by('-id')
+
+        serializer = GetCommentView(comment,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
