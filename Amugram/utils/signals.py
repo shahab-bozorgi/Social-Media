@@ -1,5 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+
+from friends.models import Follow
 from posts.models import Post, LikePost, Comment
 
 
@@ -34,7 +36,7 @@ def update_like_count_on_delete(sender, instance, **kwargs):
 @receiver(post_save, sender=Comment)
 def update_comment_count_on_add(sender, instance, created, **kwargs):
     if created:
-        instance.post.comments_count += 1
+        instance.post.comments_cou += 1
         instance.post.save()
 
 
@@ -42,3 +44,16 @@ def update_comment_count_on_add(sender, instance, created, **kwargs):
 def update_comment_count_on_delete(sender, instance, **kwargs):
     instance.post.comments_count -= 1
     instance.post.save()
+
+@receiver(post_save, sender=Follow)
+def update_followings_count_on_add(sender, instance, created, **kwargs):
+    if created:
+        user_profile = instance.follower.profile
+        user_profile.followings_count += 1
+        user_profile.save()
+
+@receiver(post_delete, sender=Follow)
+def update_posts_count_on_delete(sender, instance, **kwargs):
+    user_profile = instance.follower.profile
+    user_profile.followings_count -= 1
+    user_profile.save()
