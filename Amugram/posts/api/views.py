@@ -135,7 +135,6 @@ class DeleteCommentView(APIView):
         return Response({"detail": "Comment deleted successfully."}, status=status.HTTP_200_OK)
 
 
-
 class GetCommentsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = GetCommentView
@@ -147,6 +146,8 @@ class GetCommentsView(APIView):
 
         serializer = GetCommentView(comment,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 
 
