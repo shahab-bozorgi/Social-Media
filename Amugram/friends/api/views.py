@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from accounts.models import User
-from friends.api.serializers import FollowSystem, FollowersSerializer
+from friends.api.serializers import FollowSystem, FollowersSerializer, FollowingsSerializer
 from friends.models import Follow
 
 
@@ -19,11 +19,21 @@ class FollowView(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class FollowingsView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FollowingsSerializer
+
+    def get_queryset(self, **kwargs):
+        user_username = self.kwargs.get('username')
+        user = get_object_or_404(User.objects.select_related(), username=user_username)
+        return user.following.all()
+
+
 class FollowersView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FollowersSerializer
 
     def get_queryset(self, **kwargs):
         user_username = self.kwargs.get('username')
-        user = get_object_or_404(User, username=user_username)
+        user = get_object_or_404(User.objects.select_related(), username=user_username)
         return user.followers.all()

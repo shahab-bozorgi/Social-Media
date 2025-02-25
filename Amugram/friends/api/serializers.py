@@ -44,9 +44,9 @@ class FollowSystem(serializers.ModelSerializer):
 
 
 class FollowingsSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='follower.username', read_only=True)
-    avatar = serializers.CharField(source='follower.profile.avatar', read_only=True)
-    fullname = serializers.CharField(source='follower.profile.fullname', read_only=True)
+    username = serializers.CharField(source='following.username', read_only=True)
+    avatar = serializers.CharField(source='following.profile.avatar', read_only=True)
+    fullname = serializers.CharField(source='following.profile.full_name', read_only=True)
 
     class Meta:
         model = Follow
@@ -60,7 +60,7 @@ class FollowingsSerializer(serializers.ModelSerializer):
 class FollowersSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='follower.username', read_only=True)
     avatar = serializers.CharField(source='follower.profile.avatar', read_only=True)
-    fullname = serializers.CharField(source='follower.profile.fullname', read_only=True)
+    fullname = serializers.CharField(source='following.profile.full_name', read_only=True)
 
     class Meta:
         model = Follow
