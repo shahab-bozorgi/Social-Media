@@ -1,10 +1,22 @@
 from rest_framework import serializers
-from accounts.models import User
+
+from accounts.models import Profile
 from friends.models import Follow
 
 
-class FollowSystem(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
 
+    class Meta:
+        model = Profile
+        fields = [
+            'username',
+            'first_name',
+            'avatar'
+        ]
+
+
+class FollowSystem(serializers.ModelSerializer):
     class Meta:
         model = Follow
 
@@ -30,3 +42,31 @@ class FollowSystem(serializers.ModelSerializer):
         follow = Follow.objects.create(follower=follower, **validated_data)
         return follow
 
+
+class FollowingsSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='follower.username', read_only=True)
+    avatar = serializers.CharField(source='follower.profile.avatar', read_only=True)
+    fullname = serializers.CharField(source='follower.profile.fullname', read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = [
+            'username',
+            'fullname',
+            'avatar',
+        ]
+
+
+class FollowersSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='follower.username', read_only=True)
+    avatar = serializers.CharField(source='follower.profile.avatar', read_only=True)
+    fullname = serializers.CharField(source='follower.profile.fullname', read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = [
+            'username',
+            'fullname',
+            'avatar',
+
+        ]

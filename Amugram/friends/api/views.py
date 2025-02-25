@@ -1,10 +1,10 @@
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from accounts.models import User
-from friends.api.serializers import FollowSystem
+from friends.api.serializers import FollowSystem, FollowersSerializer
 from friends.models import Follow
 
 
@@ -19,4 +19,11 @@ class FollowView(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class FollowersView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FollowersSerializer
 
+    def get_queryset(self, **kwargs):
+        user_username = self.kwargs.get('username')
+        user = get_object_or_404(User, username=user_username)
+        return user.followers.all()

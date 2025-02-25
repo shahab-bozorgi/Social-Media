@@ -134,6 +134,10 @@ class Profile(models.Model):
     followers_count = models.PositiveIntegerField(default=0, null=True)
     posts_count = models.PositiveIntegerField(default=0, null=True)
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
         return self.user.username
 
