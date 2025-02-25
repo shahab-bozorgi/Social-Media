@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from utils.utils import IsNotBlocked
 from .serializers import UserSerializer, ProfileSerializer, PublicProfileSerializer, \
     UpdateSerializer
 from ..models import User, Profile
@@ -39,7 +40,7 @@ class ProtectedView(APIView):
 
 
 class ProfileView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsNotBlocked]
 
     def get(self, request, *args, **kwargs):
         username = kwargs.get('username')

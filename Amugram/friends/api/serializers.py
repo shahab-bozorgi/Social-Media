@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import Profile
-from friends.models import Follow
+from friends.models import Follow, Block
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -68,5 +68,16 @@ class FollowersSerializer(serializers.ModelSerializer):
             'username',
             'fullname',
             'avatar',
+
+        ]
+
+
+class BlocksSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        models = Block
+        fields = [
+            'blocked',
 
         ]
