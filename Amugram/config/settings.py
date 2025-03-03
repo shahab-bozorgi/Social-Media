@@ -91,7 +91,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         # check this line for develop
-        'NAME': 'Social',
+        'NAME': 'social_media',
         # ___
         'USER': 'shahab',
         'PASSWORD': '1234',
