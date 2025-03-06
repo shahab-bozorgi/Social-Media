@@ -1,6 +1,6 @@
-import uuid
 from django.db import models
 from accounts.models import User, Profile
+from posts.tasks import compress_image
 
 
 class Post(models.Model):
@@ -24,7 +24,15 @@ class PostImage(models.Model):
     image = models.ImageField(upload_to="posts/")
 
     def __str__(self):
-        return f"{self.post.id}"
+        return f"{self.post.id}, {self.post.__sizeof__()}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        compress_image.delay(self.id)
+
+    def get_image_size(self):
+        return self.image.size
+
 
 
 class Comment(models.Model):

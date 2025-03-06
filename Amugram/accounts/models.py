@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -111,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        """Returns True if the user is active and a admin."""
+        """Returns True if the user is active and an admin."""
         return self.is_active and self.is_superuser
 
     class Meta:

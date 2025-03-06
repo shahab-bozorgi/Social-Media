@@ -11,6 +11,12 @@ from posts.models import Post, PostImage, LikePost, Comment
 from utils.utils import StandardResultsSetPagination
 
 
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import CreatePostSerializer
+
 class CreatePostView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -25,12 +31,15 @@ class CreatePostView(APIView):
         if serializer.is_valid():
             post = serializer.save(user=request.user)
 
+            # ایجاد تصاویر برای پست و ذخیره آنها
             for image in images:
                 PostImage.objects.create(post=post, image=image)
 
             return Response(CreatePostSerializer(post).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(f"Original size: {post_image.image.size} bytes")
+        print(f"Compressed size: {output.tell()} bytes")
 
 
 class DeletePostView(APIView):

@@ -12,12 +12,13 @@ djangorestframework_simplejwt==5.4.0
 kombu==5.4.2
 pillow==11.1.0
 prompt_toolkit==3.0.50
-psycopg2==2.9.10
 psycopg2-binary==2.9.10
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 six==1.17.0
+python-dotenv
 sqlparse==0.5.3
 tzdata==2025.1
 vine==5.1.0
 wcwidth==0.2.13
+gunicorn==23.0.0
