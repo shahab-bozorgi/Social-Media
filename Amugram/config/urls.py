@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
     path('friends/', include('friends.urls')),
+    path('notifications/', include('user_notifications.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
         'api/swagger/',

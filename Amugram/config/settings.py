@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
     'friends.apps.FriendsConfig',
+    'user_notifications.apps.UserNotificationsConfig',
 
     # packages
     'rest_framework',
