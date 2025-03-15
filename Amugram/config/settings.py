@@ -29,7 +29,6 @@ DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = ['*']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,8 +42,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
     'friends.apps.FriendsConfig',
-    'notifications.apps.NotificationsConfig',
-    # 'notifications',
 
     # packages
     'rest_framework',
