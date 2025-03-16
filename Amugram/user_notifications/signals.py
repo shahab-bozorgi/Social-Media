@@ -30,6 +30,7 @@ def new_followed_notification(sender, instance, created, **kwargs):
         create_notification.delay(instance.id)
 
 
+
 # @receiver(post_delete, sender=Follow)
 # def delete_follow_notification(sender, instance, **kwargs):
 #     delete_notification.delay(instance.id)
