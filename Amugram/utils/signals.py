@@ -57,3 +57,5 @@ def update_posts_count_on_delete(sender, instance, **kwargs):
     user_profile = instance.follower.profile
     user_profile.followings_count -= 1
     user_profile.save()
+
+
