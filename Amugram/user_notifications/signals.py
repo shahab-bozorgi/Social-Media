@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from friends.models import Follow
 from .models import Notification
 from django.contrib.auth import get_user_model
-from .tasks import create_notification, delete_notification
+from .tasks import create_notification, delete_unfollow_notification_task
 
 User = get_user_model()
 
@@ -15,22 +15,14 @@ def new_user_notification(sender, instance, created, **kwargs):
             message="Welcome to our platform! 🎉"
         )
 
-# @receiver(post_save, sender=Follow)
-# def new_followed_notification(sender, instance, created, **kwargs):
-#     if created:
-#         Notification.objects.create(
-#             user=instance.following,
-#             message=f"{instance.follower.username} followed you!"
-#         )
-
-
 @receiver(post_save, sender=Follow)
 def new_followed_notification(sender, instance, created, **kwargs):
     if created:
         create_notification.delay(instance.id)
 
+@receiver(post_delete, sender=Follow)
+def delete_unfollow_notification(sender, instance, **kwargs):
+    delete_unfollow_notification_task.delay(instance.following.id, instance.follower.username)
 
 
-# @receiver(post_delete, sender=Follow)
-# def delete_follow_notification(sender, instance, **kwargs):
-#     delete_notification.delay(instance.id)
+
