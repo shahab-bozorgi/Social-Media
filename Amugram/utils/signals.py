@@ -58,4 +58,17 @@ def update_posts_count_on_delete(sender, instance, **kwargs):
     user_profile.followings_count -= 1
     user_profile.save()
 
+@receiver(post_save, sender=Follow)
+def update_followers_count_on_add(sender, instance, created, **kwargs):
+    if created:
+        user_profile = instance.following.profile
+        user_profile.followers_count += 1
+        user_profile.save()
+
+
+@receiver(post_delete, sender=Follow)
+def update_followers_count_on_delete(sender, instance, **kwargs):
+    user_profile = instance.following.profile
+    user_profile.followers_count -= 1
+    user_profile.save()
 

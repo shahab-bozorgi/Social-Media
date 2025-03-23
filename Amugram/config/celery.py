@@ -10,3 +10,6 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
+# celery -A config worker --loglevel = info
+
+

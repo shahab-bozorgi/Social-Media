@@ -1,7 +1,7 @@
 # Stage 1: Builder Stage
 FROM python:3.12-slim AS builder
 
-# Install system dependencies for psycopg2 (if you want to use psycopg2 instead of psycopg2-binary)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
@@ -16,15 +16,12 @@ WORKDIR /app
 # Copy the requirements file
 COPY requirements.txt /app/
 
-# Install Python dependencies (including psycopg2 or psycopg2-binary)
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Gunicorn
+# Install Celery and Gunicorn
+RUN pip install celery==5.4.0
 RUN pip install gunicorn==23.0.0
-
-# Set environment variables to optimize Python
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
 
 # Upgrade pip
 RUN pip install --upgrade pip
@@ -37,8 +34,9 @@ RUN useradd -m -r appuser && \
     mkdir /app && \
     chown -R appuser /app
 
-# Install Gunicorn in the production image as well
+# Install Gunicorn and Celery in the production image
 RUN pip install gunicorn==23.0.0
+RUN pip install celery==5.4.0
 
 # Copy the Python dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
@@ -49,7 +47,11 @@ WORKDIR /app
 # Copy application code and set ownership
 COPY --chown=appuser:appuser . .
 
-# Set environment variables to optimize Python
+# Copy entrypoint script and make it executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
