@@ -1,1 +1,33 @@
-Social Media App is a social networking platform that allows users to connect, view and share posts, send private messages, and interact with other users. The app provides features like user registration and login using JWT, profile management, post creation, comments, and the ability to follow/unfollow other users. Built with Django and Django REST Framework, the app uses JWT for user authentication. This project is ideal for anyone interested in building a social networking system or looking to create a simple API for managing users and posts.
+# 📌 **Social Media App**  
+A social media application built with **Django**, **Celery**, **Redis**, and **JWT** for managing users, posts, following, and real-time messaging.
+
+---
+
+## 🚀 **Features**  
+- User Registration and Login with JWT  
+- Create, Edit, and Delete Posts  
+- Follow and Unfollow Users  
+- Like and Comment on Posts  
+- Send Notifications using Celery and Redis  
+- Real-time Messaging using WebSocket  
+- User Management and Permissions
+
+---
+
+## 🛠 **Tech Stack**  
+- **Backend:** Django, Django REST Framework (DRF)  
+- **Authentication:** JWT (djangorestframework-simplejwt)  
+- **Task Management:** Celery  
+- **Message Broker:** Redis  
+- **Database:** PostgreSQL  
+- **WebSocket:** Django Channels  
+- **Containerization:** Docker (if used)
+
+---
+
+## ⚙️ **Installation**  
+
+1. Clone the repository:  
+```bash
+git clone https://github.com/username/social-media-app.git
+cd social-media-app
