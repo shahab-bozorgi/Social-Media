@@ -1,6 +1,5 @@
 from django.db import models
-from accounts.models import User, Profile
-from posts.tasks import compress_image
+from accounts.models import User
 
 
 class Post(models.Model):
@@ -28,7 +27,7 @@ class PostImage(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        compress_image.delay(self.id)
+        # compress_image.delay(self.id)
 
     def get_image_size(self):
         return self.image.size
@@ -130,3 +129,4 @@ class LikeComment(models.Model):
                 condition=models.Q(comment__isnull=False),
             ),
         ]
+

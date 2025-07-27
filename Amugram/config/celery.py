@@ -12,4 +12,3 @@ app.autodiscover_tasks()
 
 # celery -A config worker --loglevel = info
 
-

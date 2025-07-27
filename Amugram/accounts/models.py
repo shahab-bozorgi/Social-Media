@@ -141,6 +141,9 @@ class Profile(models.Model):
         return self.user.username
 
 
+class ImageRecord(models.Model):
+    file_path = models.CharField(max_length=500)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
-
-
+    def __str__(self):
+        return self.file_path.url

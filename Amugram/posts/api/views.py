@@ -1,5 +1,9 @@
+from celery import chain, current_app
+from celery.result import AsyncResult
 from django.db.migrations import serializer
 from django.shortcuts import get_object_or_404
+from drf_spectacular import openapi
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -9,8 +13,7 @@ from posts.api.serializers import CreatePostSerializer, PostSerializer, PostsSer
     CreateCommentSerializer, GetCommentView
 from posts.models import Post, PostImage, LikePost, Comment
 from utils.utils import StandardResultsSetPagination
-
-
+from posts.tasks import download_image, compress_image, save_image_record
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -157,8 +160,60 @@ class GetCommentsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class StartImagePipelineView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='url',
+                type=str,
+                location=OpenApiParameter.QUERY,
+                required=True,
+                description='URL of the image'
+            )
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        url = request.GET.get('url')
+        if not url:
+            return Response({'error': 'URL is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        result = chain(
+            download_image.s(url),
+            compress_image.s(),
+            save_image_record.s()
+        )()
 
+        return Response({'task_id': result.id}, status=status.HTTP_202_ACCEPTED)
+
+class TaskStatusView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='task_id',
+                type=str,
+                location=OpenApiParameter.QUERY,
+                required=True,
+                description='id of the task'
+            )
+        ]
+    )
+    def get(self, request, *args, **kwargs):
+        task_id = request.GET.get('task_id')
+        if not task_id:
+            return Response({'error': 'task_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        result = AsyncResult(task_id, app=current_app)
+
+        response_data = {
+            'task_id': task_id,
+            'status': result.status,  # PENDING, STARTED, SUCCESS, FAILURE, RETRY
+            'result': result.result if result.successful() else None,
+        }
+
+        if result.failed():
+            response_data['error'] = str(result.result)
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 
